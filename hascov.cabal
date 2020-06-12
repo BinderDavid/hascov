@@ -21,6 +21,7 @@ source-repository head
 library
   exposed-modules:
       HPC.Combine
+      Args
   other-modules:
       Paths_hascov
   hs-source-dirs:
@@ -55,3 +56,4 @@ test-suite hascov-test
       base >=4.7 && <5
     , hascov
   default-language: Haskell2010
+
