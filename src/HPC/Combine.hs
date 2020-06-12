@@ -9,7 +9,7 @@ import qualified Data.Set as Set
 import Options.Applicative
 import Trace.Hpc.Tix ( readTix, writeTix )
 
-import Utils ( MergeFun(..), filterTix, mergeTix )
+import Utils
 
 --------------------------------------------------------------------------------
 -- The different functions that hpc-combine supports
@@ -63,33 +63,12 @@ hpc_combine opts = do
 -- hascov hpc-combine
 --------------------------------------------------------------------------------
 
-parseSet :: Ord a => Parser a -> Parser (Set.Set a)
-parseSet p =  Set.fromList <$> (many p)
-
-parseIncludeMods :: Parser (Set.Set String)
-parseIncludeMods = parseSet (strOption ( long "include" <> metavar "[PACKAGE:][MODULE]" <> help "include MODULE and/or PACKAGE"))
-
-parseExcludeMods :: Parser (Set.Set String)
-parseExcludeMods = parseSet (strOption ( long "exclude" <> metavar "[PACKAGE:][MODULE]" <> help "exclude MODULE and/or PACKAGE"))
-
-parseOutputFile :: Parser (Maybe FilePath)
-parseOutputFile = (maybe Nothing Just) <$> (optional $ strOption ( long "output" <> metavar "FILE" <> help "output FILE"))
-
 parseCombineFun :: Parser CombineFun
 parseCombineFun = option auto ( long "function"
                               <> metavar "FUNCTION"
                               <> help "combine .tix files with join function, FUNCTION = ADD | DIFF | SUB"
                               <> value ADD
                               <> showDefault )
-parseMergeFun :: Parser MergeFun
-parseMergeFun = option auto ( long "union"
-                            <> metavar "MERGE"
-                            <> help "Use the merge function of the module namespace, MERGE = UNION | INTERSECTION"
-                            <> value INTERSECTION
-                            <> showDefault )
-
-parseArgument :: Parser FilePath
-parseArgument = argument str (metavar "TIX_FILE")
 
 combineParser :: Parser CombineOptions
 combineParser = CombineOptions <$> parseIncludeMods <*> parseExcludeMods <*> parseCombineFun <*> parseMergeFun <*> parseOutputFile <*> parseArgument <*> parseArgument

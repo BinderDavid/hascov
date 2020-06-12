@@ -21,6 +21,7 @@ source-repository head
 library
   exposed-modules:
       HPC.Combine
+      HPC.Map
       Args
       Utils
   other-modules:

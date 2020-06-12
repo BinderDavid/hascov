@@ -3,6 +3,7 @@ module Utils where
 import Trace.Hpc.Tix
 import qualified Data.Set as Set
 import qualified Data.Map as Map
+import Options.Applicative
 
 data MergeFun = INTERSECTION | UNION
      deriving (Eq,Show, Read, Enum)
@@ -79,3 +80,28 @@ filterTix :: Set.Set String -- ^ The included modules
 filterTix im em (Tix tixs) =
      Tix $ filter (allowModule im em . tixModuleName) tixs
 
+--------------------------------------------------------------------------------
+-- Parser helper functions
+--------------------------------------------------------------------------------
+
+parseSet :: Ord a => Parser a -> Parser (Set.Set a)
+parseSet p =  Set.fromList <$> (many p)
+
+parseIncludeMods :: Parser (Set.Set String)
+parseIncludeMods = parseSet (strOption ( long "include" <> metavar "[PACKAGE:][MODULE]" <> help "include MODULE and/or PACKAGE"))
+
+parseExcludeMods :: Parser (Set.Set String)
+parseExcludeMods = parseSet (strOption ( long "exclude" <> metavar "[PACKAGE:][MODULE]" <> help "exclude MODULE and/or PACKAGE"))
+
+parseOutputFile :: Parser (Maybe FilePath)
+parseOutputFile = (maybe Nothing Just) <$> (optional $ strOption ( long "output" <> metavar "FILE" <> help "output FILE"))
+
+parseMergeFun :: Parser MergeFun
+parseMergeFun = option auto ( long "union"
+                            <> metavar "MERGE"
+                            <> help "Use the merge function of the module namespace, MERGE = UNION | INTERSECTION"
+                            <> value INTERSECTION
+                            <> showDefault )
+
+parseArgument :: Parser FilePath
+parseArgument = argument str (metavar "TIX_FILE")
