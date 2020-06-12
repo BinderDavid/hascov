@@ -63,14 +63,17 @@ hpc_combine opts = do
 -- hascov hpc-combine
 --------------------------------------------------------------------------------
 
+parseSet :: Ord a => Parser a -> Parser (Set.Set a)
+parseSet p =  Set.fromList <$> (many p)
+
 parseIncludeMods :: Parser (Set.Set String)
-parseIncludeMods = Set.fromList <$> many <$> strOption ( long "include" <> metavar "[PACKAGE:][MODULE]" <> help "include MODULE and/or PACKAGE")
+parseIncludeMods = parseSet (strOption ( long "include" <> metavar "[PACKAGE:][MODULE]" <> help "include MODULE and/or PACKAGE"))
 
 parseExcludeMods :: Parser (Set.Set String)
-parseExcludeMods = Set.fromList <$> many <$> strOption ( long "exclude" <> metavar "[PACKAGE:][MODULE]" <> help "exclude MODULE and/or PACKAGE")
+parseExcludeMods = parseSet (strOption ( long "exclude" <> metavar "[PACKAGE:][MODULE]" <> help "exclude MODULE and/or PACKAGE"))
 
 parseOutputFile :: Parser (Maybe FilePath)
-parseOutputFile = Just <$> strOption ( long "output" <> metavar "FILE" <> help "output FILE")
+parseOutputFile = (maybe Nothing Just) <$> (optional $ strOption ( long "output" <> metavar "FILE" <> help "output FILE"))
 
 parseCombineFun :: Parser CombineFun
 parseCombineFun = option auto ( long "function"
@@ -87,7 +90,6 @@ parseMergeFun = option auto ( long "union"
 
 parseArgument :: Parser FilePath
 parseArgument = argument str (metavar "TIX_FILE")
-
 
 combineParser :: Parser CombineOptions
 combineParser = CombineOptions <$> parseIncludeMods <*> parseExcludeMods <*> parseCombineFun <*> parseMergeFun <*> parseOutputFile <*> parseArgument <*> parseArgument
