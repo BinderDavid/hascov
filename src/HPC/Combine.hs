@@ -32,9 +32,9 @@ data CombineOptions = CombineOptions
   , co_excludeMods :: Set String
   , co_combineFun  :: CombineFun
   , co_mergeModule :: MergeFun
+  , co_outputFile  :: Maybe FilePath
   , co_firstFile   :: FilePath
   , co_secondFile  :: FilePath
-  , co_outputFile  :: Maybe FilePath
   }
 
 --------------------------------------------------------------------------------
@@ -63,17 +63,32 @@ hpc_combine opts = do
 -- hascov hpc-combine
 --------------------------------------------------------------------------------
 
-default_combine_options :: CombineOptions
-default_combine_options = CombineOptions
-  { co_includeMods = Set.empty
-  , co_excludeMods = Set.empty
-  , co_combineFun = ADD
-  , co_mergeModule = INTERSECTION
-  , co_firstFile = ""
-  , co_secondFile = ""
-  , co_outputFile = Nothing
-  }
+parseIncludeMods :: Parser (Set.Set String)
+parseIncludeMods = Set.fromList <$> many <$> strOption ( long "include" <> metavar "[PACKAGE:][MODULE]" <> help "include MODULE and/or PACKAGE")
+
+parseExcludeMods :: Parser (Set.Set String)
+parseExcludeMods = Set.fromList <$> many <$> strOption ( long "exclude" <> metavar "[PACKAGE:][MODULE]" <> help "exclude MODULE and/or PACKAGE")
+
+parseOutputFile :: Parser (Maybe FilePath)
+parseOutputFile = Just <$> strOption ( long "output" <> metavar "FILE" <> help "output FILE")
+
+parseCombineFun :: Parser CombineFun
+parseCombineFun = option auto ( long "function"
+                              <> metavar "FUNCTION"
+                              <> help "combine .tix files with join function, FUNCTION = ADD | DIFF | SUB"
+                              <> value ADD
+                              <> showDefault )
+parseMergeFun :: Parser MergeFun
+parseMergeFun = option auto ( long "union"
+                            <> metavar "UNION"
+                            <> help "xxx"
+                            <> value INTERSECTION
+                            <> showDefault )
+
+parseArgument :: Parser FilePath
+parseArgument = argument str (metavar "TIX_FILE")
+
 
 combineParser :: Parser CombineOptions
-combineParser = pure default_combine_options
+combineParser = CombineOptions <$> parseIncludeMods <*> parseExcludeMods <*> parseCombineFun <*> parseMergeFun <*> parseOutputFile <*> parseArgument <*> parseArgument
 
