@@ -1,6 +1,6 @@
 module Args where
 
-import HPC.Combine (CombineOptions(..), default_combine_options)
+import HPC.Combine (CombineOptions, combineParser)
 
 import Options.Applicative
 
@@ -17,8 +17,5 @@ parser = info ((subparser subparsers) <**> helper) (fullDesc <> header "hascov -
 -- hascov hpc-combine
 --------------------------------------------------------------------------------
 
-combineParser :: Parser Commands
-combineParser = pure (HPCCombine default_combine_options)
-
 combineSubParser :: Mod CommandFields Commands
-combineSubParser = command "hpc-combine" (info (combineParser <**> helper) (progDesc "Combine two .tix files in a single .tix file"))
+combineSubParser = command "hpc-combine" (info ((HPCCombine <$> combineParser) <**> helper) (progDesc "Combine two .tix files in a single .tix file"))
