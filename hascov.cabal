@@ -22,6 +22,7 @@ library
   exposed-modules:
       HPC.Combine
       Args
+      Utils
   other-modules:
       Paths_hascov
   hs-source-dirs:
