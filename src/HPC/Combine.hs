@@ -83,8 +83,8 @@ parseCombineFun = option auto ( long "function"
                               <> showDefault )
 parseMergeFun :: Parser MergeFun
 parseMergeFun = option auto ( long "union"
-                            <> metavar "UNION"
-                            <> help "xxx"
+                            <> metavar "MERGE"
+                            <> help "Use the merge function of the module namespace, MERGE = UNION | INTERSECTION"
                             <> value INTERSECTION
                             <> showDefault )
 
