@@ -27,6 +27,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , optparse-applicative >=0.15.0 && <0.16
   default-language: Haskell2010
 
 executable hascov-exe
@@ -39,6 +40,7 @@ executable hascov-exe
   build-depends:
       base >=4.7 && <5
     , hascov
+    , optparse-applicative >=0.15.0 && <0.16
   default-language: Haskell2010
 
 test-suite hascov-test
