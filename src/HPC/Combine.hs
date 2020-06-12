@@ -4,12 +4,12 @@ module HPC.Combine
   , combineParser
   ) where
 
-import Data.Set (Set)
+import Data.Set ( Set )
 import qualified Data.Set as Set
 import Options.Applicative
-import Trace.Hpc.Tix
+import Trace.Hpc.Tix ( readTix, writeTix )
 
-import Utils
+import Utils ( MergeFun(..), filterTix, mergeTix )
 
 --------------------------------------------------------------------------------
 -- The different functions that hpc-combine supports
