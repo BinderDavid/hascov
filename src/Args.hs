@@ -1,13 +1,25 @@
 module Args where
 
 import HPC.Combine (CombineOptions, combineParser)
+import HPC.Draft (DraftOptions)
 import HPC.Map (MapOptions, mapParser)
+import HPC.Markup (MarkupOptions)
+import HPC.Overlay (OverlayOptions)
+import HPC.Report (ReportOptions)
+import HPC.Show (ShowOptions)
+import HPC.Sum (SumOptions)
 
 import Options.Applicative
 
 data Commands
   = HPCCombine CombineOptions
+  | HPCDraft DraftOptions
   | HPCMap MapOptions
+  | HPCMarkup MarkupOptions
+  | HPCOverlay OverlayOptions
+  | HPCReport ReportOptions
+  | HPCShow ShowOptions
+  | HPCSum SumOptions
 
 parser :: ParserInfo Commands
 parser = info ((subparser subparsers) <**> helper) (fullDesc <> header "hascov -- haskell coverage")

@@ -21,7 +21,13 @@ source-repository head
 library
   exposed-modules:
       HPC.Combine
+      HPC.Draft
       HPC.Map
+      HPC.Markup
+      HPC.Overlay
+      HPC.Report
+      HPC.Show
+      HPC.Sum
       Args
       Utils
   other-modules:
